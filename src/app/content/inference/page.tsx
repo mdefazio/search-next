@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, ReactNode } from 'react';
 import { css } from '@emotion/react';
 import Image from 'next/image';
 //
@@ -30,48 +30,45 @@ import {
 const items: InferenceType[] = [
   {
     inference_id: "elser_model",
-    model: ".elser_model_2",
-    model_config: "2 vCPU · 4GB",
-    request_total: 12,
-    request_errors: 1,
+    service_settings: "4 / 2",
     provider: 'elasticsearch',
     indices: 4,
   },
   {
     inference_id: "multilingual_e5_base",
-    model: ".multiingual-e5-base",
-    model_config: "2 vCPU · 4GB",
-    request_total: 2,
-    request_errors: 1,
+    service_settings: "4 / 2",
+    provider: 'Cohere',
+    indices: 4,
+  },
+  {
+    inference_id: "multilingual_e5_base",
+    service_settings: "4 / 2",
     provider: 'elasticsearch',
     indices: 4,
   },
   {
-    inference_id: "cohere-embed-english-v3-0-puk",
-    model: "Cohere/Cohere-embed-english-v3.0",
-    model_config: "1x GPU · 16GB",
-    request_total: 1282,
-    request_errors: 28,
+    inference_id: "hugging-face-gpt2",
+    service_settings: ".../model/gpt2",
     provider: "Hugging Face",
     indices: 4,
   },
 ]
-interface ModelRenderProps {
-  model: string,
-  model_config: string
+
+interface RowRenderProps {
+  main: string,
+  secondary: string,
+  bold?: boolean
 }
 
-const ModelRender = ({ model, model_config }: ModelRenderProps) => {
-
-  // const bgColor = "#f7f8fc"
+const RowRender = ({ main, secondary, bold }: RowRenderProps) => {
   return (
     <EuiFlexGroup gutterSize='xs' direction='column' alignItems='flexStart'>
-      <EuiFlexItem grow={false}>
-        <EuiText size="s">{model}</EuiText>
-      </EuiFlexItem>
-      <EuiFlexItem grow={false}>
-        <EuiText size="xs" color='subdued'>{model_config}</EuiText>
-      </EuiFlexItem>
+      {bold ?
+        <EuiText size="m"><p><strong>{main}</strong></p></EuiText>
+        : <EuiText size="s"><p>{main}</p></EuiText>
+      }
+
+      <EuiText size="s" color='subdued'><p>{secondary}</p></EuiText>
     </EuiFlexGroup >
   )
 }
@@ -80,43 +77,16 @@ const columns: Array<EuiBasicTableColumn<InferenceType>> = [
   {
     name: "Name",
     field: "inference_id",
-    render: (inference_id: string) => (
-      <EuiText size="s">{inference_id}</EuiText>
+    render: (inference_id: string, value) => (
+      <RowRender main={inference_id} secondary={value.service_settings} bold />
     )
-  },
-  {
-    name: "Model",
-    field: "model",
-    render: (model: string, value: any) => {
-      return (<ModelRender model={model} model_config={value.model_config} />)
-    }
   },
   {
     name: "Provider",
     field: "provider",
-    width: '160px',
     render: (provider: string) => (
-      <EuiBadge color='hollow'>{provider}</EuiBadge>
+      <RowRender main={provider} secondary={provider === 'elser' ? "sparse-embedding" : "text-embedding"} />
     )
-  },
-  {
-    name: "Requests",
-    field: "request_total",
-    width: '120px',
-    align: 'right',
-  },
-  {
-    name: "Success rate",
-    field: "request_total",
-    width: '120px',
-    align: 'left',
-    render: (request_total: number, value: any) => {
-      const successRate = Math.ceil((1 - (value.request_errors / request_total)) * 100);
-
-      return (
-        <EuiText size="s" color={successRate > 95 ? 'success' : 'subdued'}>{successRate}%</EuiText>
-      )
-    }
   },
   {
     name: "Indices",
