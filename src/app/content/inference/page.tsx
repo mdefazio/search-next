@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import Image from 'next/image';
 //
 //
-import { InferenceType } from '@/lib/definitions';
+import { InferenceType } from '../../../lib/definitions';
 
 import {
   EuiBasicTable,
@@ -155,10 +155,10 @@ export default function InferenceEndpoints() {
 
   const TableUtilityBar = () => {
     const paddingStyles = useEuiPaddingCSS('vertical');
-    const cssStyles = css(paddingStyles['m']);
+    // const cssStyles = css(paddingStyles['m']);
 
     return (
-      <div css={cssStyles}><EuiText size="s"><p>{`Showing 1-${items.length} of ${items.length}`}</p></EuiText></div>
+      <div><EuiText size="s"><p>{`Showing 1-${items.length} of ${items.length}`}</p></EuiText></div>
     )
   }
 
