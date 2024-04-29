@@ -56,10 +56,17 @@ export const SideNav = () => {
           isSelected: checkParams('/content/settings'),
           onClick: () => router.push('/content/settings'),
         },
-
-
-
-
+      ]
+    },
+    {
+      name: 'Relevance',
+      id: 'relevance',
+      items: [
+        {
+          name: "Inference Endpoints",
+          id: 'inference-endpoints',
+          onClick: () => router.push('/relevance/inference-endpoints'),
+        },
       ]
     },
     {
