@@ -144,8 +144,8 @@ export default function InferenceEndpoints() {
         pageTitle="Inference Endpoints"
         description="Manage your Elastic and third-party endpoints generated from the Inference API."
         rightSideItems={[
-          <AddEndpointFlyout />,
-          <EuiButtonEmpty key="manage-models">API Documentation</EuiButtonEmpty>,
+          <AddEndpointFlyout key="infernece-flyout" />,
+          <EuiButtonEmpty key="api-docs">API Documentation</EuiButtonEmpty>,
           <EuiButtonEmpty key="manage-models">Trained Models</EuiButtonEmpty>
         ]}
       />
