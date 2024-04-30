@@ -16,7 +16,8 @@ export type SplitPanelType = {
 export type InferenceType = {
   inference_id: string,
   service_settings: string,
-  provider: "elasticsearch" | "OpenAI" | "Cohere" | "Hugging Face",
-  indices?: number,
+  provider: "elasticsearch" | "elser" | "OpenAI" | "Cohere" | "Hugging Face",
+  modelType: "text-embedding" | "sparse-embedding",
+
 }
 

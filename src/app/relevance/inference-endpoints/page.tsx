@@ -25,32 +25,34 @@ import {
   EuiSplitPanel,
   useEuiBackgroundColor,
 } from '@elastic/eui';
+import { AddEndpointFlyout } from './components/AddEnpointFlyout';
+import { ConfirmDeleteModal } from './components/ConfirmDeleteModal';
 
 
 const items: InferenceType[] = [
   {
     inference_id: "elser_model",
     service_settings: "4 / 2",
-    provider: 'elasticsearch',
-    indices: 4,
+    provider: 'elser',
+    modelType: 'sparse-embedding',
   },
   {
     inference_id: "multilingual_e5_base",
     service_settings: "4 / 2",
     provider: 'Cohere',
-    indices: 4,
+    modelType: 'text-embedding',
   },
   {
     inference_id: "multilingual_e5_base",
     service_settings: "4 / 2",
     provider: 'elasticsearch',
-    indices: 4,
+    modelType: 'text-embedding',
   },
   {
     inference_id: "hugging-face-gpt2",
     service_settings: ".../model/gpt2",
     provider: "Hugging Face",
-    indices: 4,
+    modelType: 'text-embedding',
   },
 ]
 
@@ -64,7 +66,7 @@ const RowRender = ({ main, secondary, bold }: RowRenderProps) => {
   return (
     <EuiFlexGroup gutterSize='xs' direction='column' alignItems='flexStart'>
       {bold ?
-        <EuiText size="m"><p><strong>{main}</strong></p></EuiText>
+        <EuiText size="s"><p><strong>{main}</strong></p></EuiText>
         : <EuiText size="s"><p>{main}</p></EuiText>
       }
 
@@ -83,15 +85,19 @@ const columns: Array<EuiBasicTableColumn<InferenceType>> = [
   },
   {
     name: "Provider",
+    width: "260px",
     field: "provider",
     render: (provider: string) => (
-      <RowRender main={provider} secondary={provider === 'elser' ? "sparse-embedding" : "text-embedding"} />
+      <EuiText size="s"><p>{provider}</p></EuiText>
     )
   },
   {
-    name: "Indices",
-    field: "indices",
-    width: '80px',
+    name: "Type",
+    width: "260px",
+    field: "modelType",
+    render: (modelType: string) => (
+      <EuiBadge color='hollow'>{modelType}</EuiBadge>
+    )
   },
   {
     name: "Actions",
@@ -106,10 +112,10 @@ const columns: Array<EuiBasicTableColumn<InferenceType>> = [
       },
       {
         name: <span>Actions</span>,
-        icon: 'pencil',
+        icon: 'trash',
         type: 'icon',
         description: 'This is the action',
-        onClick: () => (console.log('click'))
+        onClick: () => (<ConfirmDeleteModal />)
       },
     ]
   }
@@ -138,7 +144,7 @@ export default function InferenceEndpoints() {
         pageTitle="Inference Endpoints"
         description="Manage your Elastic and third-party endpoints generated from the Inference API."
         rightSideItems={[
-          <EuiButton fill iconSide='left' iconType="plusInCircle" key="add-model">Add endpoint</EuiButton>,
+          <AddEndpointFlyout />,
           <EuiButtonEmpty key="manage-models">API Documentation</EuiButtonEmpty>,
           <EuiButtonEmpty key="manage-models">Trained Models</EuiButtonEmpty>
         ]}
